@@ -1,5 +1,5 @@
 # Specifications for the OCaml-Cgi library                 -*-shell-script-*-
-# 	$Id: META,v 1.1 2005/01/24 17:28:38 chris_77 Exp $	
+# 	$Id: META,v 1.1.1.1 2005/01/24 17:28:38 chris_77 Exp $	
 name="Magic"
 description="OCaml interface to libmagic library"
 requires = ""

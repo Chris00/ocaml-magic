@@ -1,6 +1,6 @@
 # Magic
 # Copyright (C) 2005: Christophe TROESTLER
-#	$Id: Makefile,v 1.1 2005/01/24 17:28:38 chris_77 Exp $	
+#	$Id: Makefile,v 1.1.1.1 2005/01/24 17:28:38 chris_77 Exp $	
 PKGNAME		= $(shell grep name META | \
 			sed -e "s/.*\"\([^\"]*\)\".*/\1/")
 PKGVERSION	= $(shell grep version META | \

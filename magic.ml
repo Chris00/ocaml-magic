@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.ml,v 1.1 2005/01/24 17:28:38 chris_77 Exp $	 *)
+(* 	$Id: magic.ml,v 1.1.1.1 2005/01/24 17:28:38 chris_77 Exp $	 *)
 
 
 
