@@ -1,0 +1,8 @@
+# Specifications for the OCaml-Cgi library                 -*-shell-script-*-
+# 	$Id: META,v 1.1 2005/01/24 17:28:38 chris_77 Exp $	
+name="Magic"
+description="OCaml interface to libmagic library"
+requires = ""
+archive(byte) = "magic.cma"
+archive(native) = "magic.cmxa"
+version = "0.5"

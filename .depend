@@ -1,0 +1,4 @@
+file.cmo: magic.cmi 
+file.cmx: magic.cmx 
+magic.cmo: magic.cmi 
+magic.cmx: magic.cmi 
