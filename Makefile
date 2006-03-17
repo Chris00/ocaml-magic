@@ -1,6 +1,6 @@
 # Magic
 # Copyright (C) 2005: Christophe TROESTLER
-#	$Id: Makefile,v 1.1 2005/01/24 17:28:38 chris_77 Exp $	
+#	$Id: Makefile,v 1.2 2006/03/17 09:54:36 chris_77 Exp $	
 PKGNAME		= $(shell grep name META | \
 			sed -e "s/.*\"\([^\"]*\)\".*/\1/")
 PKGVERSION	= $(shell grep version META | \
@@ -38,13 +38,18 @@ ex: $(DEMOS:.ml=.exe) $(DEMOS:.ml=.com)
 
 $(ARCHIVE): magic_stub.o magic.ml magic.cmi
 	$(OCAMLMKLIB) -o $(basename $@) -oc $(basename $@)_stub -failsafe \
-	  -lmagic -L$(MAGIC_A) -dllpath $(OCAMLLINSTUBS) \
-	  $(filter %.o, $^) $(filter %.ml, $^)
+	  -lmagic -L$(MAGIC_A) $(filter %.o, $^) $(filter %.ml, $^)
 
 $(XARCHIVE): $(ARCHIVE)
 
 
+# Examples
+file.exe: file.ml $(ARCHIVE)
+	  $(OCAMLC) -o $@ -cclib -L. -dllpath . $(ARCHIVE) $<
+file.com: file.ml $(XARCHIVE)
+	  $(OCAMLOPT) -o $@ -cclib -L. $(XARCHIVE) $<
 
+# Install
 install: install-byte install-opt install-doc
 install-byte: byte
 	[ -d $(OCAMLLIBDIR) ] || mkdir -p $(OCAMLLIBDIR)
@@ -74,12 +79,6 @@ dist:
 	tar --exclude "CVS" --exclude ".cvsignore" --exclude-from=.cvsignore \
 	  -zcvf $(PKG_TARBALL) $(PKGNAME)-$(PKGVERSION)
 	rm -rf $(PKGNAME)-$(PKGVERSION)
-
-# Examples
-file.exe: file.ml $(ARCHIVE)
-	  $(OCAMLC) -o $@ -dllpath . $(ARCHIVE) $<
-file.com: file.ml $(XARCHIVE)
-	  $(OCAMLOPT) -o $@ -cclib -L. $(XARCHIVE) $<
 
 # Release a Sourceforge tarball and publish the HTML doc 
 .PHONY: web upload
