@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 */
-/* 	$Id: magic_stub.c,v 1.1 2005/01/24 17:28:38 chris_77 Exp $	 */
+/* 	$Id: magic_stub.c,v 1.2 2006/03/17 10:26:43 chris_77 Exp $	 */
 
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
@@ -27,19 +27,59 @@
 
 #include <magic.h>
 #include <errno.h>
+#define _XOPEN_SOURCE 600
 #include <string.h>
+#include <stdio.h>
 
-#define CAML_MAGIC_VERSION "0.1"
+/* Outputs an error message and terminates the program. */
+#define DEBUG(...) \
+  fprintf(stderr, "DEBUG magic_stub: " __VA_ARGS__);  \
+  printf("\n")
+
+#define CAML_MAGIC_VERSION "0.2"
 
 /*
  * Failure
  */
 
-static void raise_failure(const char * msg)
+static void raise_magic_failure(const char * msg)
 {
   static value * exn = NULL;
   if (exn == NULL) exn = caml_named_value("Magic.Failure");
   raise_with_string(*exn, (char *) msg);
+}
+
+/* [fname] is the function name. */
+static void raise_on_error(const char* fname, magic_t cookie)
+{
+  const char *err_magic;
+  char *errmsg; /* For thread safety of error messages */
+  int flen;
+  
+  flen = strlen(fname);
+  if ((err_magic = magic_error(cookie)) != NULL) {
+    if ((errmsg = malloc(flen + strlen(err_magic) + 1)) == NULL)
+      raise_out_of_memory();
+    strcpy(errmsg, fname);
+    strcpy(errmsg + flen, err_magic);
+    raise_magic_failure(errmsg);
+  }
+  else {
+    int len = 80;  /* Initial buffer length */
+    int err;
+  
+    /* Allocate buffer [errmsg] until there is enough space for the
+     * error message. */
+    err = magic_errno(cookie);
+    if ((errmsg = malloc(len)) == NULL) raise_out_of_memory();
+    strcpy(errmsg, fname);
+    while (strerror_r(err, errmsg + flen, len - flen) < 0) {
+      len *= 2;
+      errmsg = realloc(errmsg, len);
+      if (errmsg == NULL) raise_out_of_memory();
+    }
+    raise_sys_error(copy_string(errmsg));
+  }
 }
 
 
@@ -47,24 +87,31 @@ static void raise_failure(const char * msg)
  * magic_t
  */
 
+/* magic_t is a pointer on 'struct magic_set' so one can set it to NULL */
 #define COOKIE_VAL(v) (* ((magic_t *) Data_custom_val(v)))
 
 /* If the cookie has not been forcibly closed with [magic_close], free it. */
 static void free_cookie(value c)
 {
   magic_t cookie = COOKIE_VAL(c);
-  if (cookie != NULL) magic_close(cookie);
+  if (cookie != NULL) {
+    magic_close(cookie);
+    COOKIE_VAL(c) = NULL;
+  }
 }
 
+/* compare magic_t pointers (=> total order) */
 static int compare_cookie(value c1, value c2)
 {
-  if (COOKIE_VAL(c1) == COOKIE_VAL(c2))      return 0;
-  else if (COOKIE_VAL(c1) < COOKIE_VAL(c2))  return -1;
+  magic_t cookie1 = COOKIE_VAL(c1), cookie2 = COOKIE_VAL(c2);
+  
+  if (cookie1 == cookie2)      return 0;
+  else if (cookie1 < cookie2)  return -1;
   else return 1;
 }
 
 static struct custom_operations cookie_ops = {
-    /* identifier */ "magic/CAMLinterface/" CAML_MAGIC_VERSION,
+    /* identifier */ "be.ac.umh.math/magic.cookie." CAML_MAGIC_VERSION,
     /* finalize */ free_cookie,
     /* compare */ compare_cookie,
     /* hash */ custom_hash_default,
@@ -72,42 +119,40 @@ static struct custom_operations cookie_ops = {
     /* deserialize */ custom_deserialize_default
 };
 
-#define ALLOC_COOKIE alloc_custom(&cookie_ops, sizeof(magic_t),  \
-                     sizeof(magic_t), 20 * sizeof(magic_t))
+#define ALLOC_COOKIE alloc_custom(&cookie_ops, sizeof(magic_t), \
+                     sizeof(magic_t), 40 * sizeof(magic_t))
 
 /*
  * Stubs
  */
 
-CAMLprim
-value magic_open_stub(value flags)
+CAMLprim value ocaml_magic_open(value flags)
 {
   CAMLparam1(flags);
   CAMLlocal1(c);
-  char *errmsg; /* For thread safety of error messages */
-  int len = 80; /* Initial buffer length */
-
+  char *errmsg;
+  int len = 80;
+  
   c = ALLOC_COOKIE;
-  if ((COOKIE_VAL(c) = magic_open(Int_val(flags))) == NULL) {
+  if ((COOKIE_VAL(c) = magic_open(Int_val(flags) | MAGIC_ERROR)) == NULL) {
     if (errno == EINVAL)
-      raise_failure("Magic.create: Preserve_atime not supported");
+      /* An unsupported value for flags was given */
+      raise_magic_failure("Magic.create: Preserve_atime not supported");
     else {
-      /* Allocate buffer [errmsg] until there is enough space for the
-       * error message. */
-      errmsg = malloc(len);
+      /* No cookie yet, so one cannot use the above generic err fun */
+      if ((errmsg = malloc(len)) == NULL) raise_out_of_memory();
       strcpy(errmsg, "Magic.create: "); /* 14 chars */
       while (strerror_r(errno, errmsg + 14, len - 14) < 0) {
         len *= 2;
-        realloc(errmsg, len);
+        if ((errmsg = realloc(errmsg, len)) == NULL) raise_out_of_memory();
       }
-      raise_failure(errmsg);
+      raise_sys_error(copy_string(errmsg));
     }
   }
   CAMLreturn(c);
 }
 
-CAMLprim
-value magic_close_stub(value c)
+CAMLprim value ocaml_magic_close(value c)
 {
   CAMLparam1(c);
   magic_t cookie = COOKIE_VAL(c);
@@ -118,43 +163,41 @@ value magic_close_stub(value c)
 }
 
 
-CAMLprim
-value magic_file_stub(value c, value fname)
+CAMLprim value ocaml_magic_file(value c, value fname)
 {
   CAMLparam2(c, fname);
   const char * ans;
   magic_t cookie = COOKIE_VAL(c);
 
-  if (cookie == NULL) caml_invalid_argument("Magic.file");
-  if ((ans = magic_file(cookie, String_val(fname))) == NULL)
-    raise_failure(magic_error(cookie));
+  if (cookie == NULL) invalid_argument("Magic.file");
+  if ((ans = magic_file(cookie, String_val(fname))) == NULL) {
+    raise_on_error("Magic.file: ", cookie);
+  }
   CAMLreturn(copy_string(ans));
 }
 
-CAMLprim
-value magic_buffer_stub(value c, value buf)
+CAMLprim value ocaml_magic_buffer(value c, value buf, value len)
 {
-  CAMLparam2(c, buf);
+  CAMLparam3(c, buf, len);
   const char * ans;
   magic_t cookie = COOKIE_VAL(c);
 
   if (cookie == NULL) caml_invalid_argument("Magic.buffer");
-  if ((ans = magic_buffer(cookie, String_val(buf), string_length(buf)))
+  if ((ans = magic_buffer(cookie, String_val(buf), Int_val(len)))
       == NULL)
-    raise_failure(magic_error(cookie));
+    raise_on_error("Magic.buffer: ", cookie);
   CAMLreturn(copy_string(ans));
 }
 
 
-CAMLprim
-value magic_setflags_stub(value c, value flags)
+CAMLprim value ocaml_magic_setflags(value c, value flags)
 {
   CAMLparam2(c, flags);
   magic_t cookie = COOKIE_VAL(c);
 
   if (cookie == NULL) caml_invalid_argument("Magic.setflags");
   if (magic_setflags(cookie, Int_val(flags)) < 0)
-    raise_failure("Magic.setflags: Preserve_atime not supported");
+    raise_magic_failure("Magic.setflags: Preserve_atime not supported");
   CAMLreturn(Val_unit);
 }
 
@@ -169,14 +212,12 @@ value magic_setflags_stub(value c, value flags)
   else \
     CAMLreturn(Val_true)
 
-CAMLprim
-value magic_check_default_stub(value c)
+CAMLprim value ocaml_magic_check_default(value c)
 {
   CAMLparam1(c);
   CHECK(NULL);
 }
-CAMLprim
-value magic_check_stub(value c, value filenames)
+CAMLprim value ocaml_magic_check(value c, value filenames)
 {
   CAMLparam2(c, filenames);
   CHECK(String_val(filenames));
@@ -189,18 +230,16 @@ value magic_check_stub(value c, value filenames)
   \
   if (cookie == NULL) caml_invalid_argument("Magic.compile"); \
   if (magic_compile(cookie, fname) < 0) \
-    raise_failure(magic_error(cookie)); \
+    raise_on_error("Magic.compile: ", cookie);  \
   CAMLreturn(Val_unit)
 
-CAMLprim
-value magic_compile_default_stub(value c)
+CAMLprim value ocaml_magic_compile_default(value c)
 {
   CAMLparam1(c);
   COMPILE(NULL);
 }
 
-CAMLprim
-value magic_compile_stub(value c, value filenames)
+CAMLprim value ocaml_magic_compile(value c, value filenames)
 {
   CAMLparam2(c, filenames);
   COMPILE(String_val(filenames));
@@ -213,18 +252,18 @@ value magic_compile_stub(value c, value filenames)
   \
   if (cookie == NULL) caml_invalid_argument("Magic.load"); \
   if (magic_load(cookie, fname) < 0) \
-    raise_failure(magic_error(cookie)); \
+    raise_on_error("Magic.load: ", cookie);  \
   CAMLreturn(Val_unit)
 
 CAMLprim
-value magic_load_default_stub(value c)
+value ocaml_magic_load_default(value c)
 {
   CAMLparam1(c);
   LOAD(NULL);
 }
 
 CAMLprim
-value magic_load_stub(value c, value filenames)
+value ocaml_magic_load(value c, value filenames)
 {
   CAMLparam2(c, filenames);
   LOAD(String_val(filenames));
