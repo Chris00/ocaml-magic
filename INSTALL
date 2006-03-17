@@ -1,0 +1,27 @@
+0. Perquisites
+
+   You need
+
+   * Ocaml (>= 3.07)
+   * libmagic (the package libmagic-dev for Debian)
+
+1. Compilation
+
+   make byte    for the bytecode library
+   make opt     for the native code library
+   make         for both
+
+2. Installation
+
+   make install-byte 	install the bytecode library
+   make install-opt 	install the native code library
+   make install		install both
+
+3. Example
+
+   make ex		compile the "file" example in both bytecode and
+			native code
+
+4. Documentation
+
+   make html		build the documentation in the html sudirectory
