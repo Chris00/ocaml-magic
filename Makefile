@@ -1,6 +1,6 @@
 # Magic
 # Copyright (C) 2005: Christophe TROESTLER
-#	$Id: Makefile,v 1.2 2006/03/17 09:54:36 chris_77 Exp $	
+#	$Id: Makefile,v 1.3 2006/03/17 10:39:25 chris_77 Exp $	
 PKGNAME		= $(shell grep name META | \
 			sed -e "s/.*\"\([^\"]*\)\".*/\1/")
 PKGVERSION	= $(shell grep version META | \
@@ -20,10 +20,11 @@ INTERFACES = magic.mli
 C_SOURCES = magic_stub.c
 DEMOS = file.ml
 
-DISTFILES	= README LICENSE META \
+DISTFILES	= README INSTALL LICENSE META debian/ \
   Makefile Makefile.config $(SOURCES) $(INTERFACES) $(C_SOURCES) $(DEMOS)
 
-PKG_TARBALL 	= $(PKGNAME)-$(PKGVERSION).tar.gz
+PKG_DIR		= OCaml-$(PKGNAME)-$(PKGVERSION)
+PKG_TARBALL 	= $(PKG_DIR).tar.gz
 ARCHIVE 	= $(shell grep "archive(byte)" META | \
 			sed -e "s/.*\"\([^\"]*\)\".*/\1/")
 XARCHIVE 	= $(shell grep "archive(native)" META | \
@@ -74,11 +75,10 @@ html/index.html: $(INTERFACES) $(INTERFACES:.mli=.cmi)
 # Packaging
 .PHONY: dist
 dist:
-	[ -d $(PKGNAME)-$(PKGVERSION) ] || mkdir $(PKGNAME)-$(PKGVERSION)
-	cp --preserve -r $(DISTFILES) $(PKGNAME)-$(PKGVERSION)/
-	tar --exclude "CVS" --exclude ".cvsignore" --exclude-from=.cvsignore \
-	  -zcvf $(PKG_TARBALL) $(PKGNAME)-$(PKGVERSION)
-	rm -rf $(PKGNAME)-$(PKGVERSION)
+	[ -d $(PKG_DIR) ] || mkdir $(PKG_DIR)
+	cp --preserve -r $(DISTFILES) $(PKG_DIR)
+	tar --exclude "CVS" -zcvf $(PKG_TARBALL) $(PKG_DIR)
+	rm -rf $(PKG_DIR)
 
 # Release a Sourceforge tarball and publish the HTML doc 
 .PHONY: web upload
@@ -131,7 +131,7 @@ include .depend
 clean:
 	rm -f *~ .*~ *.{o,a} *.cm[aiox] *.cmxa *.annot *.css
 	rm -f $(PKG_TARBALL) cgi.ps
-	find . -not -name *.sh -type f -perm +u=x -exec rm -f {} \;
+	find . -not -name *.sh -type f -perm -u=x -exec rm -f {} \;
 
 dist-clean: clean
 	rm .depend
