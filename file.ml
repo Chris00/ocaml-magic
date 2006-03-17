@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: file.ml,v 1.1 2005/01/24 17:28:38 chris_77 Exp $	 *)
+(* 	$Id: file.ml,v 1.2 2006/03/17 10:27:36 chris_77 Exp $	 *)
 
 (** "file" program using OCaml libmagic bindings. *)
 
@@ -26,9 +26,10 @@ let () =
     print_endline(pgm ^ " <file>");
     exit 0;
   end;
-  let c = Magic.create [] in
   try
+    let c = Magic.create [] in
     let fname = Sys.argv.(1) in
     print_endline(fname ^ ": " ^ Magic.file c fname)
-  with Magic.Failure m ->
-    print_endline("Error: " ^ m)
+  with
+  | Magic.Failure m -> print_endline("Magic.Failure(" ^ m ^ ")")
+  | Sys_error m -> print_endline("Sys_error(" ^ m ^ ")")
