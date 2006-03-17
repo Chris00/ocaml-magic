@@ -16,9 +16,10 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.mli,v 1.1 2005/01/24 17:28:38 chris_77 Exp $	 *)
+(* 	$Id: magic.mli,v 1.2 2006/03/17 09:58:59 chris_77 Exp $	 *)
 
 
+(** Try to identify the type of file using some "magic number" tests. *)
 
 type t
   (** Magic "cookies". *)
@@ -51,7 +52,8 @@ val create : ?flags:flag list -> string list -> t
 
       @param flags specifies how the other magic functions should
       behave (default: [[]]).
-      @raise Magic.Failure if there was an error allocating the magic cookie. *)
+      @raise Magic.Failure if there was an error allocating the magic cookie.
+      @raise Sys_error if there was an operating system error. *)
 
 val close : t -> unit
   (** [close cookie] frees the resources associated with the cookie [c].
@@ -62,16 +64,17 @@ val file : t -> string -> string
   (** [file cookie filename] returns a textual description of the
       contents of the filename argument.
 
-      @raise Magic.Failure
-      @raise Invalid_argument if the cookie has been closed.
-      @raise Sys_error *)
+      @raise Magic.Failure if an error occurred.
+      @raise Invalid_argument if the cookie is closed.
+      @raise Sys_error if there was an operating system error. *)
 
-val buffer : t -> string -> string
-  (** [file cookie filename] returns a textual description of the
+val buffer : t -> ?len:int -> string -> string
+  (** [file cookie ?len buf] returns a textual description of the
       contents of the filename argument.
 
-      @raise Magic.Failure
-      @raise Invalid_argument if the cookie has been closed. *)
+      @raise Magic.Failure if an error occurred.
+      @raise Invalid_argument if [cookie] is closed or if one does not
+      have [0 <= len <= String.length buf].  *)
 
 
 val setflags : t -> flag list -> unit
@@ -79,17 +82,27 @@ val setflags : t -> flag list -> unit
       should behave.
 
       @raise Magic.Failure if {!Magic.Preserve_atime} is not supported
-                           by the operating system.
+      by the operating system.
       @raise Invalid_argument if the cookie has been closed. *)
 
 val load : t -> string list -> unit
-  (** [load cookie filenames]
-      @raise Invalid_argument if the cookie has been closed. *)
+  (** [load cookie filenames] loads the the list of database files
+      [filenames], or [] for the default database file.
+
+      @raise Invalid_argument if the cookie has been closed.
+      @raise Sys_error if there was an operating system error.  *)
 
 val compile : t -> string list -> unit
-  (** [compile cookie filenames]
-      @raise Invalid_argument if the cookie has been closed. *)
+  (** [compile cookie filenames] compiles the the list of database
+      files [filenames], or [] for the default database.  The compiled
+      files created are named from the basename(1) of each file
+      argument with ".mgc" appended to it.
+
+      @raise Invalid_argument if the cookie has been closed.
+      @raise Sys_error if there was an operating system error. *)
 
 val check : t -> string list -> bool
-  (** [check cookie filenames]
+  (** [check cookie filenames] checks the validity of entries in the
+      database files [filenames], or [] for the default database.
+
       @raise Invalid_argument if the cookie has been closed. *)
