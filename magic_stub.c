@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 */
-/* 	$Id: magic_stub.c,v 1.3 2006/09/02 22:18:33 chris_77 Exp $	 */
+/* 	$Id: magic_stub.c,v 1.4 2006/09/02 22:28:42 chris_77 Exp $	 */
 
 
 #include <caml/mlvalues.h>
@@ -32,11 +32,15 @@
 #include <string.h>
 #include <stdio.h>
 
-
-#define DEBUG(...) \
-  fprintf(stderr, "DEBUG magic_stub: " __VA_ARGS__);  \
-  fprintf(stderr, "\n");                              \
+#ifdef WANT_DEBUG
+#define DEBUG(...)                                      \
+  fprintf(stderr, "DEBUG magic_stub: " __VA_ARGS__);    \
+  fprintf(stderr, "\n");                                \
   fflush(stderr)
+#else
+#define DEBUG(...)
+#endif
+
 
 #define CAML_MAGIC_VERSION "0.2"
 

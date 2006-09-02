@@ -1,6 +1,6 @@
 # Magic
 # Copyright (C) 2005: Christophe TROESTLER
-#	$Id: Makefile,v 1.4 2006/09/02 22:18:33 chris_77 Exp $	
+#	$Id: Makefile,v 1.5 2006/09/02 22:28:42 chris_77 Exp $	
 PKGNAME		= $(shell grep name META | \
 			sed -e "s/.*\"\([^\"]*\)\".*/\1/")
 PKGVERSION	= $(shell grep version META | \
@@ -9,7 +9,7 @@ PKGVERSION	= $(shell grep version META | \
 SRC_WEB		= web
 SF_WEB		= /home/groups/o/oc/ocaml-magic/htdocs
 
-include Makefile.config
+include Makefile.conf
 
 OCAMLFLAGS 	= -dtypes
 OCAMLOPTFLAGS	= -inline 2
