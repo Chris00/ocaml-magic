@@ -16,9 +16,9 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.ml,v 1.2 2006/03/17 10:00:33 chris_77 Exp $	 *)
+(* 	$Id: magic.ml,v 1.3 2006/09/02 22:18:33 chris_77 Exp $	 *)
 
-
+open Printf
 
 exception Failure of string
 
@@ -63,40 +63,43 @@ let int_of_flags flags =
   List.fold_left (fun fs f -> fs lor (int_of_flag f)) 0x000 flags
 
 
-(* FIXME: is this escaping correct for libmagic??? *)
-let escape_colon s =
-  let len = String.length s in
-  let n = ref 0 in
-  for i = 0 to len - 1 do if s.[i] = ':' then incr n done;
-  if !n = 0 then s else
-    let s' = String.create (len + !n) in
-    let j = ref 0 in
-    for i = 0 to len - 1 do
-      if s.[i] = ':' then (s'.[!j] <- '\\'; incr j);
-      s'.[!j] <- s.[i]; incr j
-    done;
-    s'
-
-(* Concatenate the filenames with ":".  If ":" is present in a
-   filename, escape it. *)
-let concat filenames =
-  String.concat ":" (List.map escape_colon filenames)
+(* Concatenate the filenames with ":".  No escaping of ':' in a
+   filename will work (the code in libmagic is simple, really).
+   Moreover, '\000' can neither be present.  Thus only tolerate
+   a-zA-Z0-9._-/\ in filenames *)
+let concat funname filenames =
+  (* Check the filename [s]. *)
+  let check s =
+    for i = 0 to String.length s - 1 do
+      match s.[i] with
+      | 'a' .. 'z' | 'A' .. 'Z' | '0' .. '9' | ' '
+      | '.' | '_' | '-' | '/' | '\\' -> ()
+      | c ->
+          let m = sprintf "Magic.%s: character %C not allowed in filename %S."
+            funname c s in
+          raise(Failure m)
+    done in
+  List.iter check filenames;
+  String.concat ":" filenames
 
 let load cookie = function
   | [] -> magic_load_default cookie
-  | filenames -> magic_load cookie (concat filenames)
+  | filenames -> magic_load cookie (concat "load" filenames)
 
 let compile cookie = function
   | [] -> magic_compile_default cookie
-  | filenames -> magic_compile cookie (concat filenames)
+  | filenames -> magic_compile cookie (concat "compile" filenames)
 
 let check cookie = function
   | [] -> magic_check_default cookie
-  | filenames -> magic_check cookie (concat filenames)
-
+  | filenames -> magic_check cookie (concat "check" filenames)
 
 let create ?(flags=[]) filenames =
   let cookie = magic_open(int_of_flags flags) in
+  (* FIXME: "/usr/share/file/magic" is a temporary choice until the
+     toplevel segfault is solved. *)
+  let filenames = (if filenames = [] then ["/usr/share/file/magic"]
+                   else filenames) in
   load cookie filenames;
   cookie
 
@@ -106,7 +109,7 @@ let setflags cookie flags =
 let file cookie filename =
   (* FIXME: For a strange reason the toplevel loops with an error "I/O
      error: Bad file descriptor" when querying an unexisting file or a
-     char device,...  (this works fine when compiled). *)
+     char device,...  (this works fine when compiled). strace.... *)
   magic_file cookie filename
 
 let buffer cookie ?len s =
@@ -114,6 +117,6 @@ let buffer cookie ?len s =
   | None -> String.length s
   | Some l ->
       if 0 <= l && l <= String.length s then l
-      else invalid_arg(Printf.sprintf "Magic.buffer: len=%i not in [0, %i]"
+      else invalid_arg(sprintf "Magic.buffer: len=%i not in [0, %i]"
                          l (String.length s)) in
   magic_buffer cookie s len

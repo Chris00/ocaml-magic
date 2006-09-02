@@ -1,6 +1,6 @@
 # Magic
 # Copyright (C) 2005: Christophe TROESTLER
-#	$Id: Makefile,v 1.3 2006/03/17 10:39:25 chris_77 Exp $	
+#	$Id: Makefile,v 1.4 2006/09/02 22:18:33 chris_77 Exp $	
 PKGNAME		= $(shell grep name META | \
 			sed -e "s/.*\"\([^\"]*\)\".*/\1/")
 PKGVERSION	= $(shell grep version META | \
@@ -42,13 +42,14 @@ $(ARCHIVE): magic_stub.o magic.ml magic.cmi
 	  -lmagic -L$(MAGIC_A) $(filter %.o, $^) $(filter %.ml, $^)
 
 $(XARCHIVE): $(ARCHIVE)
+	@sleep 0
 
 
 # Examples
-file.exe: file.ml $(ARCHIVE)
-	  $(OCAMLC) -o $@ -cclib -L. -dllpath . $(ARCHIVE) $<
-file.com: file.ml $(XARCHIVE)
-	  $(OCAMLOPT) -o $@ -cclib -L. $(XARCHIVE) $<
+file.exe: $(ARCHIVE) file.ml
+	  $(OCAMLC) -o $@ -cclib -L. -dllpath . $^
+file.com: $(XARCHIVE) file.ml
+	  $(OCAMLOPT) -o $@ -cclib -L. $^
 
 # Install
 install: install-byte install-opt install-doc
@@ -105,14 +106,14 @@ upload: dist
 # Caml general dependencies
 .SUFFIXES: .ml .mli .cmo .cmi .cmx
 %.o: %.c
-	$(OCAMLC) -c -I $(OCAML_H) $<
+	$(OCAMLC) -c -ccopt '-Wall $(CC_FLAGS)' -I $(OCAML_H) $<
 %.cmi: %.mli
 	$(OCAMLC) $(OCAMLFLAGS) -c $<
 %.cmo: %.ml
 	$(OCAMLC) $(OCAMLFLAGS) -c $<
 %.cma: # Dependencies to be set elsewhere
 	$(OCAMLC) -a -o $@ $(OCAMLFLAGS) $(filter %.cmo, $^)
-.ml.cmx:
+%.cmx: %.ml
 	$(OCAMLOPT) $(OCAMLOPTFLAGS) -c $<
 %.cmxa: # Dependencies to be set elsewhere
 	$(OCAMLOPT) -a -o $@ $(OCAMLOPTFLAGS) $(filter %.cmx, $^)
@@ -130,7 +131,7 @@ include .depend
 .PHONY: clean dist-clean
 clean:
 	rm -f *~ .*~ *.{o,a} *.cm[aiox] *.cmxa *.annot *.css
-	rm -f $(PKG_TARBALL) cgi.ps
+	rm -f $(PKG_TARBALL)
 	find . -not -name *.sh -type f -perm -u=x -exec rm -f {} \;
 
 dist-clean: clean
