@@ -1,6 +1,6 @@
 
 # check for one particular file of the sources 
-AC_INIT(ocaml-magic, 0.7, Christophe.Troestler@umh.ac.be)
+AC_INIT(ocaml-magic, 0.7, chris_77@users.sourceforge.net)
 
 VERSION=$PACKAGE_VERSION
 AC_MSG_RESULT([configuring $PACKAGE_STRING])

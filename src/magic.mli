@@ -3,7 +3,7 @@
    Copyright (C) 2005
 
      Christophe Troestler
-     email: Christophe.Troestler@umh.ac.be
+     email: chris_77@users.sourceforge.net
      WWW: http://www.umh.ac.be/math/an/software/
 
    This library is free software; you can redistribute it and/or
@@ -16,12 +16,12 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.mli,v 1.2 2008/03/23 11:06:22 chris_77 Exp $	 *)
+(* 	$Id: magic.mli,v 1.3 2008/03/23 11:28:48 chris_77 Exp $	 *)
 
 
 (** Try to identify the type of file using some "magic number" tests.
 
-    @author Christophe Troestler <chris_77\@sourceforge.net>
+    @author Christophe Troestler <chris_77\@users.sourceforge.net>
     @version 0.7
 *)
 
