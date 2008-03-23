@@ -8,20 +8,17 @@
 1. Compilation
 
    ./configure  to check for dependencies
+   make         for the target(s) supported by your platform
    make byte    for the bytecode library
    make opt     for the native code library
-   make         for both
 
-2. Installation
+2. Installation (requires ocamlfind)
 
-   make install-byte 	install the bytecode library
-   make install-opt 	install the native code library
-   make install		install both
+   make install		install the library
 
 3. Example
 
-   make ex		compile the "file" example in both bytecode and
-			native code
+   make examples	compile examples
 
 4. Documentation
 
