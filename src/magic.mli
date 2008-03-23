@@ -16,10 +16,14 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.mli,v 1.1 2008/03/23 10:28:25 chris_77 Exp $	 *)
+(* 	$Id: magic.mli,v 1.2 2008/03/23 11:06:22 chris_77 Exp $	 *)
 
 
-(** Try to identify the type of file using some "magic number" tests. *)
+(** Try to identify the type of file using some "magic number" tests.
+
+    @author Christophe Troestler <chris_77\@sourceforge.net>
+    @version 0.7
+*)
 
 type t
   (** Magic "cookies". *)
