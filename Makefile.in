@@ -1,10 +1,10 @@
-# $Id: Makefile.in,v 1.4 2008/03/23 14:54:24 chris_77 Exp $
+# $Id: Makefile.in,v 1.5 2008/03/23 15:50:53 chris_77 Exp $
 
 PKG_NAME := ocaml-magic
 DISTFILES := ChangeLog INSTALL LICENSE README \
 	bootstrap configure.ac configure Makefile.in OCamlMakefile \
 	src/*.ml src/*.mli src/*.c src/Makefile.in src/META.in \
-	examples/*.ml examples/Makefile.*.in
+	examples/*.ml examples/Makefile.in
 VERSION = @VERSION@
 PKG_TARBALL = $(PKG_NAME)-$(VERSION).tar.gz
 
@@ -26,16 +26,16 @@ distclean: clean
 .PHONY: dist doc
 doc:
 	$(MAKE) -C src htdoc
-	$(MKDIR) -p doc
-	$(RM) -rf doc/html
+	mkdir -p doc
+	$(RM) -r doc/html
 	mv src/doc/magic/html doc
-	$(RM) -rf src/doc
+	$(RM) -r src/doc
 
 dist:
-	$(RM) -rf $(PKG_NAME)-$(VERSION)
-	$(MKDIR) $(PKG_NAME)-$(VERSION)
+	-$(RM) -r $(PKG_NAME)-$(VERSION)
+	mkdir $(PKG_NAME)-$(VERSION)
 	cp -r --preserve --parents $(DISTFILES) $(PKG_NAME)-$(VERSION)
-	tar zcvf ../$(PKG_TARBALL) $(PKG_NAME)-$(VERSION)
+	tar zcvf $(PKG_TARBALL) $(PKG_NAME)-$(VERSION)
 	$(RM) -rf $(PKG_NAME)-$(VERSION)
 
 # Release a Sourceforge tarball and publish the HTML doc 
@@ -59,6 +59,7 @@ upload: dist
 	  && echo "--- Uploaded $(PKG_TARBALL) to SF"
 
 clean::
-	$(RM) -rf *~ autom4te.cache/ config.log $(PKG_TARBALL)
+	$(RM) *~ config.log config.status $(PKG_TARBALL) 
+	$(RM) -r autom4te.cache/ doc/
 	$(MAKE) -C src clean
 	$(MAKE) -C examples clean
