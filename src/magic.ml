@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.ml,v 1.1 2008/03/23 10:28:25 chris_77 Exp $	 *)
+(* 	$Id: magic.ml,v 1.2 2008/03/23 20:11:50 chris_77 Exp $	 *)
 
 open Printf
 
@@ -94,14 +94,12 @@ let check cookie = function
   | [] -> magic_check_default cookie
   | filenames -> magic_check cookie (concat "check" filenames)
 
-let create ?(flags=[]) filenames =
+let make ?(flags=[]) filenames =
   let cookie = magic_open(int_of_flags flags) in
-  (* FIXME: "/usr/share/file/magic" is a temporary choice until the
-     toplevel segfault is solved. *)
-  let filenames = (if filenames = [] then ["/usr/share/file/magic"]
-                   else filenames) in
   load cookie filenames;
   cookie
+
+let create = make
 
 let setflags cookie flags =
   magic_setflags cookie (int_of_flags flags)
@@ -109,7 +107,7 @@ let setflags cookie flags =
 let file cookie filename =
   (* FIXME: For a strange reason the toplevel loops with an error "I/O
      error: Bad file descriptor" when querying an unexisting file or a
-     char device,...  (this works fine when compiled). strace.... *)
+     char device,...  (this seems to be gone...). *)
   magic_file cookie filename
 
 let buffer cookie ?len s =
