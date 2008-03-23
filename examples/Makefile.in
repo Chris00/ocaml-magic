@@ -1,0 +1,31 @@
+#							-*-makefile-gmake-*-
+export OCAMLMAKEFILE = ../OCamlMakefile
+
+#INCDIRS = ../src @ALL_INC@
+export LIBS = @all_requires@ magic
+
+# "file" example 
+define PROJ_file
+  SOURCES="file.ml"
+  RESULT="file"
+endef
+export PROJ_file
+
+ifndef SUBPROJS
+  export SUBPROJS = file
+endif
+
+
+.PHONY: all byte opt
+all: @BEST@
+byte: byte-code
+opt: native-code
+
+export OCAMLC 	= @OCAMLC@ 
+export OCAMLOPT = @OCAMLOPT@ 
+
+export TRASH += $(wildcard *~)
+
+# Catch-all target will be applied to all subprojects automatically
+%:
+	@$(MAKE) -f $(OCAMLMAKEFILE) subprojs SUBTARGET=$@
