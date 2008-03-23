@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: file.ml,v 1.2 2006/03/17 10:27:36 chris_77 Exp $	 *)
+(* 	$Id: file.ml,v 1.1 2008/03/23 10:52:15 chris_77 Exp $	 *)
 
 (** "file" program using OCaml libmagic bindings. *)
 
