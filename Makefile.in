@@ -1,8 +1,6 @@
-# $Id: Makefile.in,v 1.2 2008/03/23 12:39:07 chris_77 Exp $
+# $Id: Makefile.in,v 1.3 2008/03/23 12:49:43 chris_77 Exp $
 
-OCAMLMAKEFILE = OCamlMakefile
 PKG_NAME := ocaml-magic
-SOURCES :=
 DISTFILES := ChangeLog INSTALL LICENSE README \
 	bootstrap configure.ac configure Makefile.in OCamlMakefile \
 	src/*.ml src/*.mli src/*.c src/Makefile.in src/META.in \
@@ -57,9 +55,7 @@ upload: dist
 	  | ncftp -p chris_77@users.sf.net upload.sourceforge.net \
 	  && echo "--- Uploaded $(PKG_TARBALL) to SF"
 
-TRASH += $(PKG_TARBALL) config.log
-
 clean::
-	$(RM) -rf autom4te.cache/
-
-include $(OCAMLMAKEFILE)
+	$(RM) -rf *~ autom4te.cache/ config.log $(PKG_TARBALL)
+	$(MAKE) -C src clean
+	$(MAKE) -C examples clean
