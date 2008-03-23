@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 */
-/* 	$Id: magic_stubs.c,v 1.1 2008/03/23 10:59:20 chris_77 Exp $	 */
+/* 	$Id: magic_stubs.c,v 1.2 2008/03/23 20:39:45 chris_77 Exp $	 */
 
 
 #include <caml/mlvalues.h>
@@ -48,8 +48,7 @@
  * Failure
  */
 
-/* Raise [Magic.Failure] where [msg] must not need to be freed
- * (i.e. it is statically allocated).  */
+/* Raise [Magic.Failure] with the message [msg].  */
 static void raise_magic_failure(const char * msg)
 {
   static value * exn = NULL;
@@ -124,6 +123,7 @@ static void free_cookie(value c)
   magic_t cookie = COOKIE_VAL(c);
   if (cookie != NULL) {
     magic_close(cookie);
+    DEBUG("free_cookie: freeing cookie %p.", cookie);
     COOKIE_VAL(c) = NULL;
   }
 }
@@ -290,6 +290,7 @@ CAMLprim value ocaml_magic_compile(value c, value filenames)
                                                            \
   if (cookie == NULL) caml_invalid_argument("Magic.load"); \
   if (magic_load(cookie, fname) < 0) {                     \
+    DEBUG("Magic.load: failed");                           \
     /*    raise_on_error("Magic.load: ", cookie);*/        \
     raise_magic_failure("Magic.load");                     \
   }                                                        \

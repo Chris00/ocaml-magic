@@ -7,6 +7,7 @@ INCDIRS = @INC@
 LIBS = @all_requires@
 CLIBS = @CLIBS@
 CFLAGS = @CFLAGS@
+#CFLAGS += -DWANT_DEBUG
 
 .PHONY: all byte opt install uninstall update
 all: @BEST@
