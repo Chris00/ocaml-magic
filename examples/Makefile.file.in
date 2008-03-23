@@ -5,7 +5,10 @@ RESULT = file
 #INCDIRS = ../src @ALL_INC@
 LIBS = @all_requires@ magic
 
+.PHONY: all byte opt
 all: @BEST@
+byte: byte-code
+opt: native-code
 
 OCAMLC 		= @OCAMLC@ 
 OCAMLOPT 	= @OCAMLOPT@ 
