@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.mli,v 1.5 2008/03/23 20:10:02 chris_77 Exp $	 *)
+(* 	$Id: magic.mli,v 1.6 2008/03/23 21:10:41 chris_77 Exp $	 *)
 
 
 (** Try to identify the type of file using some "magic number" tests.
@@ -88,8 +88,8 @@ val setflags : t -> flag list -> unit
   (** [setflags cookie flags] specifies how the other magic functions
       should behave.
 
-      @raise Magic.Failure if {!Magic.Preserve_atime} is not supported
-      by the operating system.
+      @raise Magic.Failure if the {!Magic.flag} [Preserve_atime] is
+      not supported by the operating system.
       @raise Invalid_argument if the cookie has been closed. *)
 
 val load : t -> string list -> unit
