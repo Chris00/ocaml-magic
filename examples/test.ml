@@ -16,5 +16,6 @@ let m5 = Magic.file c "../src/magic.cmxa";;
 
 Magic.load c ["/etc/magic"];;           (* usually empty *)
 Magic.load c ["/usr/share/file/magic"];;
+Magic.load c ["/usr/share/file/magic.mime"];;
 
 Magic.close c;;
