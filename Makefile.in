@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.5 2008/03/23 15:50:53 chris_77 Exp $
+# $Id: Makefile.in,v 1.6 2008/03/23 19:53:18 chris_77 Exp $
 
 PKG_NAME := ocaml-magic
 DISTFILES := ChangeLog INSTALL LICENSE README \
@@ -8,7 +8,7 @@ DISTFILES := ChangeLog INSTALL LICENSE README \
 VERSION = @VERSION@
 PKG_TARBALL = $(PKG_NAME)-$(VERSION).tar.gz
 
-# Web site:
+# Web site locally and on sourceforge:
 SRC_WEB		= web
 SF_WEB		= /home/groups/o/oc/ocaml-magic/htdocs
 

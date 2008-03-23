@@ -8,10 +8,14 @@ LIBS = @all_requires@
 CLIBS = @CLIBS@
 CFLAGS = @CFLAGS@
 
-.PHONY: all byte opt
+.PHONY: all byte opt install uninstall update
 all: @BEST@
 byte: byte-code-library
 opt: native-code-library
+
+install: libinstall
+uninstall: libuninstall
+update: uninstall install
 
 
 OCAMLC		= @OCAMLC@
