@@ -1,0 +1,7 @@
+# ocaml-magic						-*-conf-*-
+name="magic"
+version="@VERSION@"
+description="OCaml interface for libmagic"
+requires="@requires@"
+archive(byte)="magic.cma"
+archive(native)="magic.cmxa"
