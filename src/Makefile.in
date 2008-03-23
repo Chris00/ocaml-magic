@@ -1,9 +1,12 @@
 OCAMLMAKEFILE = ../OCamlMakefile
+ANNOTATE = "yes"
 
 SOURCES = magic.ml magic.mli magic_stubs.c
 RESULT  = magic
 INCDIRS = @INC@
-LIBS = @LIBS@ @all_requires@
+LIBS = @all_requires@
+CLIBS = @CLIBS@
+CFLAGS = @CFLAGS@
 
 .PHONY: all byte opt
 all: @BEST@
