@@ -7,6 +7,7 @@
 
 1. Compilation
 
+   ./configure  to check for dependencies
    make byte    for the bytecode library
    make opt     for the native code library
    make         for both
@@ -24,4 +25,4 @@
 
 4. Documentation
 
-   make html		build the documentation in the html sudirectory
+   make doc		build the documentation in the doc sudirectory
