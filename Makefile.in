@@ -1,0 +1,57 @@
+# $Id: Makefile.in,v 1.1 2008/03/23 12:07:31 chris_77 Exp $
+
+PKG_NAME := ocaml-magic
+DISTFILES := ChangeLog INSTALL LICENSE README \
+	bootstrap configure configure.ac Makefile.in \
+	src/*.ml src/*.mli src/*.c src/Makefile.in src/META.in \
+	src/OCamlMakefile 
+VERSION = @VERSION@
+PKG_TARBALL = $(PKG_NAME)-$(VERSION).tar.gz
+
+# Web site:
+SRC_WEB		= web
+SF_WEB		= /home/groups/o/oc/ocaml-magic/htdocs
+
+all clean install uninstall:
+	$(MAKE) -C src $@
+
+distclean: clean
+	$(MAKE) -C examples clean
+
+
+.PHONY: dist doc
+doc:
+	$(MAKE) -C src htdoc
+	$(MKDIR) -p doc
+	$(RM) -rf doc/html
+	mv src/doc/magic/html doc
+	$(RM) -rf src/doc
+
+dist:
+	$(RM) -rf $(PKG_NAME)-$(VERSION)
+	$(MKDIR) $(PKG_NAME)-$(VERSION)
+	cp -r --preserve --parents $(DISTFILES) $(PKG_NAME)-$(VERSION)
+	tar zcvf ../$(PKG_TARBALL) $(PKG_NAME)-$(VERSION)
+	$(RM) -rf $(PKG_NAME)-$(VERSION)
+
+# Release a Sourceforge tarball and publish the HTML doc 
+.PHONY: web upload
+web: doc
+	@if [ -d doc ] ; then \
+	  scp -r doc shell.sf.net:$(SF_WEB)/ \
+	  && echo "--- Published documentation on SF" ; \
+	fi
+	@ if [ -d $(SRC_WEB)/ ] ; then \
+	  scp $(SRC_WEB)/*.html $(SRC_WEB)/*.jpg LICENSE \
+	    shell.sf.net:$(SF_WEB) \
+	  && echo "--- Published web site (in $(SRC_WEB)/) on SF" ; \
+	fi
+
+upload: dist
+	@ if [ -z "$(PKG_TARBALL)" ]; then \
+		echo "PKG_TARBALL not defined"; exit 1; fi
+	echo -e "bin\ncd incoming\nput $(PKG_TARBALL)" \
+	  | ncftp -p chris_77@users.sf.net upload.sourceforge.net \
+	  && echo "--- Uploaded $(PKG_TARBALL) to SF"
+
+TRASH += $(PKG_TARBALL)
