@@ -1,9 +1,9 @@
 (* File: file.ml
 
-   Copyright (C) 2005
+   Copyright (C) 2005-2008
 
      Christophe Troestler
-     email: Christophe.Troestler@umh.ac.be
+     email: chris_77@users.sourceforge.net
      WWW: http://www.umh.ac.be/math/an/software/
 
    This library is free software; you can redistribute it and/or
@@ -16,14 +16,13 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: file.ml,v 1.1 2008/03/23 10:52:15 chris_77 Exp $	 *)
+(* 	$Id: file.ml,v 1.2 2008/03/23 15:03:24 chris_77 Exp $	 *)
 
 (** "file" program using OCaml libmagic bindings. *)
 
 let () =
   if Array.length Sys.argv < 2 then begin
-    let pgm = Filename.basename(Sys.executable_name) in
-    print_endline(pgm ^ " <file>");
+    print_endline(Sys.argv.(0) ^ " <file>");
     exit 0;
   end;
   try

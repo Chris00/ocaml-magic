@@ -6,8 +6,8 @@ export LIBS = @all_requires@ magic
 
 # "file" example 
 define PROJ_file
-  SOURCES="file.ml"
-  RESULT="file"
+  SOURCES = file.ml
+  RESULT  = file
 endef
 export PROJ_file
 
