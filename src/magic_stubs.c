@@ -16,7 +16,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 */
-/* 	$Id: magic_stub.c,v 1.1 2008/03/23 10:28:25 chris_77 Exp $	 */
+/* 	$Id: magic_stubs.c,v 1.1 2008/03/23 10:59:20 chris_77 Exp $	 */
 
 
 #include <caml/mlvalues.h>
