@@ -106,7 +106,8 @@ else
     BEST="byte opt"
 fi
 
-AC_CHECK_FUNCS(strerror_r strncat strerror)
+AC_CHECK_FUNCS(strerror_r,
+	[CFLAGS="$CFLAGS -DHAVE_STRERROR_R"])
 
 # substitutions to perform
 AC_SUBST(VERSION)
@@ -125,7 +126,7 @@ AC_SUBST(CAMLLIBPATH)
 AC_SUBST(BEST)
 AC_SUBST(INC)
 AC_SUBST(CLIBS)
-AC_SUBST(HAVE_STRERROR_R)
+AC_SUBST(CFLAGS)
 AC_SUBST(requires)
 all_requires="`ocamlfind query -r -separator " " -format "%p" $requires` $_requires"
 AC_SUBST(all_requires)
