@@ -92,12 +92,12 @@ CAMLLIBPATH=`$OCAMLC -where`
 
 AC_PROG_CC()
 
-# libmagic detection
+# libmagic detection (put in CLIB)
 AC_MSG_CHECKING([for libmagic])
 LIBS="$LIBS -lmagic"
 AC_TRY_LINK([#include <magic.h>],
             [magic_open(MAGIC_NONE)],
-            [AC_MSG_RESULT([found])],
+            [AC_MSG_RESULT([found]); CLIBS="$CLIBS magic"],
             [AC_MSG_ERROR([Check for magic-library failed.])])
 
 if test "$OCAMLOPT" = no ; then
@@ -105,6 +105,8 @@ if test "$OCAMLOPT" = no ; then
 else
     BEST="byte opt"
 fi
+
+AC_CHECK_FUNCS(strerror_r strncat strerror)
 
 # substitutions to perform
 AC_SUBST(VERSION)
@@ -123,6 +125,7 @@ AC_SUBST(CAMLLIBPATH)
 AC_SUBST(BEST)
 AC_SUBST(INC)
 AC_SUBST(CLIBS)
+AC_SUBST(HAVE_STRERROR_R)
 AC_SUBST(requires)
 all_requires="`ocamlfind query -r -separator " " -format "%p" $requires` $_requires"
 AC_SUBST(all_requires)
@@ -131,5 +134,5 @@ AC_SUBST(all_requires)
 AC_CONFIG_FILES([Makefile],[chmod a-w Makefile])
 AC_CONFIG_FILES([src/META])
 AC_CONFIG_FILES([src/Makefile])
-AC_CONFIG_FILES([examples/Makefile.file])
+AC_CONFIG_FILES([examples/Makefile])
 AC_OUTPUT
