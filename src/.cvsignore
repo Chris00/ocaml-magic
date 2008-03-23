@@ -10,3 +10,6 @@
 *.com
 META
 Makefile
+._d
+._bcdi
+._ncdi
