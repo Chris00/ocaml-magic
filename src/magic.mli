@@ -16,13 +16,13 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.mli,v 1.3 2008/03/23 11:28:48 chris_77 Exp $	 *)
+(* 	$Id: magic.mli,v 1.4 2008/03/23 16:00:05 chris_77 Exp $	 *)
 
 
 (** Try to identify the type of file using some "magic number" tests.
 
     @author Christophe Troestler <chris_77\@users.sourceforge.net>
-    @version 0.7
+    @version 0.7.1
 *)
 
 type t
