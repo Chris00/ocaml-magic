@@ -1,4 +1,5 @@
 #!/bin/sh
+# Romain Beauxis <toots@rastageeks.org>
 
 aclocal
 # Doing this only once sometimes yield an error message (AC_MSG_ERROR 
