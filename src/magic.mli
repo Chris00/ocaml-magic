@@ -16,13 +16,13 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the file
    LICENSE for more details.
 *)
-(* 	$Id: magic.mli,v 1.4 2008/03/23 16:00:05 chris_77 Exp $	 *)
+(* 	$Id: magic.mli,v 1.5 2008/03/23 20:10:02 chris_77 Exp $	 *)
 
 
 (** Try to identify the type of file using some "magic number" tests.
 
     @author Christophe Troestler <chris_77\@users.sourceforge.net>
-    @version 0.7.1
+    @version 0.7.2
 *)
 
 type t
@@ -49,8 +49,8 @@ type flag =
   | Raw		(** Don't translate unprintable characters to a \ooo octal
 		    representation. *)
 
-val create : ?flags:flag list -> string list -> t
-  (** [create ?flags filenames] creates a magic cookie, loading the
+val make : ?flags:flag list -> string list -> t
+  (** [make ?flags filenames] creates a magic cookie, loading the
       databases in [filenames].  If [filenames = []], the default
       database is used.
 
@@ -58,6 +58,9 @@ val create : ?flags:flag list -> string list -> t
       behave (default: [[]]).
       @raise Magic.Failure if there was an error allocating the magic cookie.
       @raise Sys_error if there was an operating system error. *)
+
+val create : ?flags:flag list -> string list -> t
+  (** @deprecated Synonym for {!Magic.make}. *)
 
 val close : t -> unit
   (** [close cookie] frees the resources associated with the cookie [c].
