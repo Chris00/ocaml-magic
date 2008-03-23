@@ -1,0 +1,12 @@
+OCAMLMAKEFILE = ../OCamlMakefile
+
+SOURCES = file.ml
+RESULT = file
+#INCDIRS = ../src @ALL_INC@
+LIBS = @all_requires@ magic
+
+all: @BEST@
+
+OCAMLC 		= @OCAMLC@ 
+OCAMLOPT 	= @OCAMLOPT@ 
+include $(OCAMLMAKEFILE)

@@ -1,0 +1,16 @@
+OCAMLMAKEFILE = ../OCamlMakefile
+
+SOURCES = magic.ml magic.mli magic_stubs.c
+RESULT  = magic
+INCDIRS = @INC@
+LIBS = @LIBS@ @all_requires@
+
+.PHONY: all byte opt
+all: @BEST@
+byte: byte-code-library
+opt: native-code-library
+
+
+OCAMLC		= @OCAMLC@
+OCAMLOPT	= @OCAMLOPT@
+include $(OCAMLMAKEFILE)
