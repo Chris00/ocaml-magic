@@ -1,7 +1,7 @@
 #							-*-makefile-gmake-*-
 export OCAMLMAKEFILE = ../OCamlMakefile
 
-#INCDIRS = ../src @ALL_INC@
+export INCDIRS = ../src @INC@
 export LIBS = @all_requires@ magic
 
 # "file" example 
@@ -11,6 +11,7 @@ define PROJ_file
 endef
 export PROJ_file
 
+# Use these, if the environment does not define subprojects to handle:
 ifndef SUBPROJS
   export SUBPROJS = file
 endif
