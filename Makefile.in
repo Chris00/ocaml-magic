@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.6 2008/03/23 19:53:18 chris_77 Exp $
+# $Id: Makefile.in,v 1.7 2008/03/23 21:11:33 chris_77 Exp $
 
 PKG_NAME := ocaml-magic
 DISTFILES := ChangeLog INSTALL LICENSE README \
@@ -42,7 +42,7 @@ dist:
 .PHONY: web upload
 web: doc
 	@if [ -d doc ] ; then \
-	  scp -r doc shell.sf.net:$(SF_WEB)/ \
+	  scp -r doc/ shell.sf.net:$(SF_WEB)/ \
 	  && echo "--- Published documentation on SF" ; \
 	fi
 	@ if [ -d $(SRC_WEB)/ ] ; then \
