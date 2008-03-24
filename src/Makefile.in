@@ -1,8 +1,10 @@
+#							-*-makefile-gmake-*-
 OCAMLMAKEFILE = ../OCamlMakefile
 ANNOTATE = "yes"
 
 SOURCES = magic.ml magic.mli magic_stubs.c
 RESULT  = magic
+LIBINSTALL_FILES = $(wildcard *.mli *.cmi *.cma *.cmx *.cmxa *.a *.so)
 INCDIRS = @INC@
 LIBS = @all_requires@
 CLIBS = @CLIBS@
