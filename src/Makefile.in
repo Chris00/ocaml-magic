@@ -4,6 +4,8 @@ ANNOTATE = "yes"
 
 SOURCES = magic.ml magic.mli magic_stubs.c
 RESULT  = magic
+# Only install the files that exist, the default OCamlMakefile tries
+# to install the native code ones even on arch with no native code support.
 LIBINSTALL_FILES = $(wildcard *.mli *.cmi *.cma *.cmx *.cmxa *.a *.so)
 INCDIRS = @INC@
 LIBS = @all_requires@
