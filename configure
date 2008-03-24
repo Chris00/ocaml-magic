@@ -4159,6 +4159,9 @@ which seems to be undefined.  Please make sure it is defined." >&2;}
 
   case $ac_file$ac_mode in
     "Makefile":F) chmod a-w Makefile ;;
+    "src/META":F) chmod a-w src/META ;;
+    "src/Makefile":F) chmod a-w src/Makefile ;;
+    "examples/Makefile":F) chmod a-w examples/Makefile ;;
 
   esac
 done # for ac_tag

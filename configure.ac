@@ -133,7 +133,7 @@ AC_SUBST(all_requires)
 
 # Finally create the Makefile and samples
 AC_CONFIG_FILES([Makefile],[chmod a-w Makefile])
-AC_CONFIG_FILES([src/META])
-AC_CONFIG_FILES([src/Makefile])
-AC_CONFIG_FILES([examples/Makefile])
+AC_CONFIG_FILES([src/META],[chmod a-w src/META])
+AC_CONFIG_FILES([src/Makefile],[chmod a-w src/Makefile])
+AC_CONFIG_FILES([examples/Makefile],[chmod a-w examples/Makefile])
 AC_OUTPUT
