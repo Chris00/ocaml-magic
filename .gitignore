@@ -8,7 +8,14 @@
 *.o
 *.exe
 *.com
+*.so
+*.a
 Makefile
 autom4te.cache
 config.log
 config.status
+._bcdi/
+._d/
+._ncdi/
+src/META
+examples/file
