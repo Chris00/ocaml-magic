@@ -1,0 +1,24 @@
+opam-version: "1.2"
+name: "magic"
+version: "0.7.3"
+maintainer: "Christophe Troestler <Christophe.Troestler@umons.ac.be>"
+authors: [ "Christophe Troestler <Christophe.Troestler@umons.ac.be>" ]
+license: "LGPL-2.1 with OCaml linking exception"
+homepage: "https://github.com/Chris00/ocaml-magic"
+dev-repo: "https://github.com/Chris00/ocaml-magic.git"
+bug-reports: "https://github.com/Chris00/ocaml-magic/issues"
+build: [
+  ["./configure"]
+  [make]
+]
+install: [make "install"]
+remove: [
+  ["ocamlfind" "remove" "magic"]
+]
+depends: [
+  "ocamlfind" {build}
+]
+depexts: [
+  [ [ "debian"  ] [ "libmagic-dev" ] ]
+  [ [ "ubuntu"  ] [ "libmagic-dev" ] ]
+]
