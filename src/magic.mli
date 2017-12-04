@@ -48,6 +48,19 @@ type flag =
 		       analyzed. *)
   | Raw		(** Don't translate unprintable characters to a \ooo octal
 		    representation. *)
+  | Error   (** Handle ENOENT etc as real errors *)
+  | Mime_Encoding (** Return the MIME encoding *)
+  | Apple (** Return the Apple creator and type *)
+  | No_Check_Compress (** Don't check for compressed files *)
+  | No_Check_Tar (** Don't check for tar files *)
+  | No_Check_Soft (** Don't check magic entries *)
+  | No_Check_Apptype (** Don't check application type *)
+  | No_Check_Elf (** Don't check elf details *)
+  | No_Check_Text (** Don't check for text files *)
+  | No_Check_Cdf (** Don't check for cdf files *)
+  | No_Check_Tokens (** Don't check tokens *)
+  | No_Check_Encodings (** Don't check text encodings *)
+
 
 val make : ?flags:flag list -> string list -> t
   (** [make ?flags filenames] creates a magic cookie, loading the
