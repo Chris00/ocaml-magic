@@ -47,6 +47,18 @@ type flag =
   | Check    (* => flush stderr for all funs.  FIXME *)
   | Preserve_atime
   | Raw
+  | Error
+  | Mime_Encoding
+  | Apple
+  | No_Check_Compress
+  | No_Check_Tar
+  | No_Check_Soft
+  | No_Check_Apptype
+  | No_Check_Elf
+  | No_Check_Text
+  | No_Check_Cdf
+  | No_Check_Tokens
+  | No_Check_Encodings
 
 (* WARNING: Keep in sync with magic.h *)
 let int_of_flag = function
@@ -58,6 +70,18 @@ let int_of_flag = function
   | Check	-> 0x040
   | Preserve_atime -> 0x080
   | Raw		-> 0x100
+  | Error -> 0x200
+  | Mime_Encoding -> 0x400
+  | Apple -> 0x800
+  | No_Check_Compress -> 0x1000
+  | No_Check_Tar -> 0x2000
+  | No_Check_Soft -> 0x4000
+  | No_Check_Apptype -> 0x8000
+  | No_Check_Elf -> 0x10000
+  | No_Check_Text -> 0x20000
+  | No_Check_Cdf -> 0x40000
+  | No_Check_Tokens -> 0x100000
+  | No_Check_Encodings -> 0x200000
 
 let int_of_flags flags =
   List.fold_left (fun fs f -> fs lor (int_of_flag f)) 0x000 flags
