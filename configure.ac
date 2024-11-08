@@ -1,6 +1,6 @@
 # check for one particular file of the sources.  Keep the version in sync
 # with src/magic.mli
-AC_INIT([ocaml-magic],[0.7.3],[Christophe.Troestler@umons.ac.be])
+AC_INIT([ocaml-magic],[0.7.4],[Christophe.Troestler@umons.ac.be])
 
 VERSION=$PACKAGE_VERSION
 AC_MSG_RESULT([configuring $PACKAGE_STRING])
