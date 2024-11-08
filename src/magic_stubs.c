@@ -51,7 +51,7 @@
 /* Raise [Magic.Failure] with the message [msg].  */
 static void raise_magic_failure(const char * msg)
 {
-  static value * exn = NULL;
+  static const value * exn = NULL;
   if (exn == NULL) exn = caml_named_value("Magic.Failure");
   caml_raise_with_string(*exn, (char *) msg);
 }
@@ -63,7 +63,7 @@ static void raise_on_error(const char* fname, const magic_t cookie)
 {
   CAMLparam0();
   CAMLlocal1(verrmsg);
-  static value * exn = NULL;
+  static const value * exn = NULL;
   const char *err_magic = magic_error(cookie);
   char *errmsg; /* For thread safety of error messages */
   const int flen = strlen(fname);
