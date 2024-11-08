@@ -18,6 +18,6 @@ depends: [
   "ocamlfind" {build}
 ]
 depexts: [
-  [ [ "debian"  ] [ "libmagic-dev" ] ]
-  [ [ "ubuntu"  ] [ "libmagic-dev" ] ]
+  ["libmagic-dev"] {os-family = "debian"}
 ]
+available: [ os != "win32" ]
