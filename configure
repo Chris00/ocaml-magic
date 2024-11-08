@@ -3764,8 +3764,6 @@ all_requires="`ocamlfind query -r -separator " " -format "%p" $requires` $_requi
 # Finally create the Makefile and samples
 ac_config_files="$ac_config_files Makefile"
 
-ac_config_files="$ac_config_files magic.opam"
-
 ac_config_files="$ac_config_files src/META"
 
 ac_config_files="$ac_config_files src/Makefile"
@@ -4474,7 +4472,6 @@ for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
-    "magic.opam") CONFIG_FILES="$CONFIG_FILES magic.opam" ;;
     "src/META") CONFIG_FILES="$CONFIG_FILES src/META" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "examples/Makefile") CONFIG_FILES="$CONFIG_FILES examples/Makefile" ;;
@@ -4894,7 +4891,6 @@ which seems to be undefined.  Please make sure it is defined" >&2;}
 
   case $ac_file$ac_mode in
     "Makefile":F) chmod a-w Makefile ;;
-    "magic.opam":F) chmod a-w magic.opam ;;
     "src/META":F) chmod a-w src/META ;;
     "src/Makefile":F) chmod a-w src/Makefile ;;
     "examples/Makefile":F) chmod a-w examples/Makefile ;;
