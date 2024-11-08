@@ -35,6 +35,8 @@ dist:
 	cp -r --preserve --parents $(DISTFILES) $(PKG_NAME)-$(VERSION)
 	tar zcvf $(PKG_TARBALL) $(PKG_NAME)-$(VERSION)
 	$(RM) -rf $(PKG_NAME)-$(VERSION)
+	@echo "sha256=`sha256sum $(PKG_TARBALL)`"
+	@echo "md5=`md5sum $(PKG_TARBALL)`"
 
 # Release a Sourceforge tarball and publish the HTML doc 
 .PHONY: web upload
