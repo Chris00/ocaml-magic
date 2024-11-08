@@ -1,12 +1,12 @@
 # check for one particular file of the sources.  Keep the version in sync
 # with src/magic.mli
-AC_INIT(ocaml-magic, 0.7.3, chris_77@users.sourceforge.net)
+AC_INIT([ocaml-magic],[0.7.3],[Christophe.Troestler@umons.ac.be])
 
 VERSION=$PACKAGE_VERSION
 AC_MSG_RESULT([configuring $PACKAGE_STRING])
 
 OCAMLFIND_LDCONF=""
-AC_ARG_ENABLE([ldconf], AC_HELP_STRING([--disable-ldconf],[don't modify the dynamic loader configuration file (default is enable)]),[ac_enable_ldconf=$enableval],[ac_enable_ldconf=$enableval],[ac_enable_ldconf=yes])
+AC_ARG_ENABLE([ldconf], AS_HELP_STRING([--disable-ldconf],[don't modify the dynamic loader configuration file (default is enable)]),[ac_enable_ldconf=$enableval],[ac_enable_ldconf=$enableval],[ac_enable_ldconf=yes])
 if test "$ac_enable_ldconf" = no ; then
 	AC_MSG_RESULT([disabling modification of ld.conf])
 	OCAMLFIND_LDCONF=dummy
@@ -95,10 +95,7 @@ AC_PROG_CC()
 # libmagic detection (put in CLIB)
 AC_MSG_CHECKING([for libmagic])
 LIBS="$LIBS -lmagic"
-AC_TRY_LINK([#include <magic.h>],
-            [magic_open(MAGIC_NONE)],
-            [AC_MSG_RESULT([found]); CLIBS="$CLIBS magic"],
-            [AC_MSG_ERROR([Check for magic-library failed.])])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <magic.h>]], [[magic_open(MAGIC_NONE)]])],[AC_MSG_RESULT([found]); CLIBS="$CLIBS magic"],[AC_MSG_ERROR([Check for magic-library failed.])])
 
 if test "$OCAMLOPT" = no ; then
     BEST=byte
@@ -133,6 +130,7 @@ AC_SUBST(all_requires)
 
 # Finally create the Makefile and samples
 AC_CONFIG_FILES([Makefile],[chmod a-w Makefile])
+AC_CONFIG_FILES([magic.opam],[chmod a-w magic.opam])
 AC_CONFIG_FILES([src/META],[chmod a-w src/META])
 AC_CONFIG_FILES([src/Makefile],[chmod a-w src/Makefile])
 AC_CONFIG_FILES([examples/Makefile],[chmod a-w examples/Makefile])

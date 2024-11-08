@@ -1,7 +1,5 @@
-# $Id: Makefile.in,v 1.7 2008/03/23 21:11:33 chris_77 Exp $
-
 PKG_NAME := ocaml-magic
-DISTFILES := ChangeLog INSTALL LICENSE README \
+DISTFILES := ChangeLog INSTALL LICENSE README.md \
 	bootstrap configure.ac configure Makefile.in OCamlMakefile \
 	src/*.ml src/*.mli src/*.c src/Makefile.in src/META.in \
 	examples/*.ml examples/Makefile.in

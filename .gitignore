@@ -14,8 +14,10 @@ Makefile
 autom4te.cache
 config.log
 config.status
+magic.opam
 ._bcdi/
 ._d/
 ._ncdi/
 src/META
 examples/file
+doc/
