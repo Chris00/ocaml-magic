@@ -15,7 +15,7 @@ fi
 # Check for Ocaml compilers
 
 # we first look for ocamlc in the path; if not present, we fail
-AC_CHECK_PROG(OCAMLC,ocamlc,`which ocamlc`,no)
+AC_PATH_PROG(OCAMLC,ocamlc,no)
 if test "$OCAMLC" = no ; then
 	AC_MSG_ERROR(Cannot find ocamlc.)
 fi
